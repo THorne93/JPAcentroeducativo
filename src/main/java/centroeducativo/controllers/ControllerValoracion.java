@@ -55,6 +55,32 @@ public class ControllerValoracion extends SuperControladorJPA {
 
 	}
 
+	public static Valoracion getNotaSingularDelete(int idEstudiante, int idProfesor, int idMateria, int nota)
+			throws SQLException {
+
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("centroEducativo");
+
+		EntityManager em = entityManagerFactory.createEntityManager();
+		Valoracion v = new Valoracion();
+		try {
+			Query q = em.createNativeQuery(
+					"SELECT * FROM valoracionmateria where idProfesor = ? and idEstudiante = ? and idMateria = ? and valoracion = ?",
+					Valoracion.class);
+			q.setParameter(1, idProfesor);
+			q.setParameter(2, idEstudiante);
+			q.setParameter(3, idMateria);
+			q.setParameter(4, nota);
+			v = (Valoracion) q.getSingleResult();
+
+		} catch (Exception e) {
+			return null;
+		}
+
+		em.close();
+		return v;
+
+	}
+
 	/**
 	 * Singleton
 	 * 
@@ -86,7 +112,21 @@ public class ControllerValoracion extends SuperControladorJPA {
 			ex.printStackTrace();
 			em.getTransaction().rollback();
 		}
-	
+
 	}
 
+	public void delete(Valoracion v) {
+		EntityManager em = getEntityManager();
+
+		try {
+			em.getTransaction().begin();
+			Valoracion o = em.merge(v);
+			em.remove(o);
+			em.getTransaction().commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			em.getTransaction().rollback();
+		}
+
+	}
 }

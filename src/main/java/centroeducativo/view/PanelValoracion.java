@@ -456,6 +456,15 @@ public class PanelValoracion extends JFrame {
 				ControllerValoracion.getInstance().insert(v);
 			}
 			}
+		
+		for (int i = 0; i < this.listModelEstudiantes.size(); i++) {
+			Estudiante e = this.listModelEstudiantes.get(i);
+			Valoracion v = new Valoracion();
+			v = ControllerValoracion.getNotaSingularDelete(e.getId(), p.getId(), m.getId(),idNota);
+			if (v != null) {
+				ControllerValoracion.getInstance().delete(v);
+				}
 		}
 	
+}
 }
